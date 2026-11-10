@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Jungle Rush 3D</string>
+    <string name="title_activity_main">Jungle Rush 3D</string>
+    <string name="package_name">com.junglerush.game3d</string>
+    <string name="custom_url_scheme">com.junglerush.game3d</string>
+</resources>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>JUNGLE RUSH 3D</title>
+  <link rel="stylesheet" href="./src/ui/styles.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./node_modules/three/build/three.module.js"
+      }
+    }
+  </script>
+</head>
+<body>
+  <!-- 3D WebGL Canvas Layer -->
+  <div id="canvas-container"></div>
+
+  <!-- Interactive 2D UI Overlay Layer -->
+  <div id="ui-overlay">
+
+    <!-- 1. MAIN MENU SCREEN -->
+    <div id="screen-menu" class="screen active">
+      <div class="menu-header">
+        <h1 class="game-title">JUNGLE RUSH</h1>
+        <div class="game-subtitle">3D ENDLESS TEMPLE RUNNER</div>
+      </div>
+
+      <div class="menu-stats-bar">
+        <div class="stat-item">🪙 <span id="menu-coins" class="val">0</span></div>
+        <div class="stat-item">🏆 <span id="menu-high-score" class="val">0</span></div>
+        <div class="stat-item">🏃 <span id="menu-best-dist" class="val">0m</span></div>
+      </div>
+
+      <div class="menu-btn-group">
+        <button id="btn-play" class="btn btn-play-hero">RUN!</button>
+        <button id="btn-open-characters" class="btn btn-secondary">CHARACTERS</button>
+        <button id="btn-open-shop" class="btn btn-secondary">UPGRADES</button>
+        <button id="btn-open-missions" class="btn btn-secondary">MISSIONS & REWARDS</button>
+        <button id="btn-open-settings" class="btn btn-secondary">SETTINGS</button>
+      </div>
+    </div>
+
+    <!-- 2. IN-GAME HUD -->
+    <div id="screen-hud" class="screen">
+      <div class="hud-top-bar">
+        <div class="hud-stats">
+          <div class="hud-badge score">⭐ <span id="hud-score">0</span></div>
+          <div class="hud-badge coins">🪙 <span id="hud-coins">0</span></div>
+          <div class="hud-badge dist">🏃 <span id="hud-distance">0m</span></div>
+          <div id="hud-fps" class="hud-fps-counter">60 FPS</div>
+        </div>
+        <button id="btn-pause" class="hud-btn-pause">⏸</button>
+      </div>
+
+      <!-- Active Power-up countdown gauges -->
+      <div id="hud-powerups" class="hud-powerups-list"></div>
+
+      <!-- Virtual Controls (Mobile On-Screen D-Pad & Actions) -->
+      <div id="virtual-controls">
+        <div class="v-dpad">
+          <button id="v-left" class="v-btn interactive-ui">◀</button>
+          <button id="v-right" class="v-btn interactive-ui">▶</button>
+        </div>
+        <div class="v-actions">
+          <button id="v-jump" class="v-btn interactive-ui">▲</button>
+          <button id="v-slide" class="v-btn interactive-ui">▼</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. PAUSE SCREEN -->
+    <div id="screen-pause" class="screen">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h2>GAME PAUSED</h2>
+        </div>
+        <div class="menu-btn-group" style="width: 100%; margin: 12px 0;">
+          <button id="btn-resume" class="btn btn-primary">RESUME</button>
+          <button id="btn-pause-restart" class="btn btn-gold">RESTART RUN</button>
+          <button id="btn-pause-menu" class="btn btn-secondary">MAIN MENU</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. GAME OVER SCREEN -->
+    <div id="screen-gameover" class="screen">
+      <div class="modal-box gameover-box">
+        <h2 class="go-title">EXPEDITION FAILED!</h2>
+        <div id="go-new-high-badge" class="new-high-badge" style="display:none;">🎉 NEW HIGH SCORE! 🎉</div>
+
+        <div class="go-stats-grid">
+          <div class="go-stat-card full-width">
+            <div class="label">FINAL SCORE</div>
+            <div id="go-final-score" class="val" style="font-size: 2rem;">0</div>
+          </div>
+          <div class="go-stat-card">
+            <div class="label">DISTANCE</div>
+            <div id="go-final-distance" class="val">0m</div>
+          </div>
+          <div class="go-stat-card">
+            <div class="label">COINS EARNED</div>
+            <div id="go-final-coins" class="val">+0</div>
+          </div>
+        </div>
+
+        <div class="menu-btn-group" style="width: 100%;">
+          <button id="btn-restart" class="btn btn-gold btn-play-hero">RUN AGAIN</button>
+          <button id="btn-gameover-shop" class="btn btn-secondary">SHOP & UPGRADES</button>
+          <button id="btn-gameover-menu" class="btn btn-secondary">MAIN MENU</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. CHARACTER SELECTION SCREEN -->
+    <div id="screen-characters" class="screen">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h2>RUNNERS</h2>
+          <div class="modal-bank-coins">🪙 <span id="char-bank-coins">0</span></div>
+        </div>
+        <div id="char-cards-container" class="cards-scroll-container"></div>
+        <button class="btn btn-secondary btn-back-menu">BACK TO MENU</button>
+      </div>
+    </div>
+
+    <!-- 6. SHOP & UPGRADES SCREEN -->
+    <div id="screen-shop" class="screen">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h2>POWER-UP SHOP</h2>
+          <div class="modal-bank-coins">🪙 <span id="shop-bank-coins">0</span></div>
+        </div>
+        <div id="shop-items-container" class="cards-scroll-container"></div>
+        <button class="btn btn-secondary btn-back-menu">BACK TO MENU</button>
+      </div>
+    </div>
+
+    <!-- 7. MISSIONS & DAILY REWARDS SCREEN -->
+    <div id="screen-missions" class="screen">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h2>MISSIONS & REWARDS</h2>
+          <div class="modal-bank-coins">🪙 <span id="missions-bank-coins">0</span></div>
+        </div>
+
+        <!-- Daily Reward Banner -->
+        <div style="background: rgba(255, 215, 0, 0.12); border: 1px solid var(--glass-border); padding: 14px; border-radius: 12px; margin-bottom: 16px; text-align: center;">
+          <h3 style="color: var(--primary-gold); margin-bottom: 4px;">DAILY EXPEDITION REWARD</h3>
+          <p id="daily-status-text" style="font-size: 0.85rem; color: #a7f3d0; margin-bottom: 10px;">Claim daily bonus</p>
+          <button id="btn-claim-daily" class="btn btn-gold" style="width: 100%;">CLAIM REWARD 🎁</button>
+        </div>
+
+        <div id="missions-list-container" class="cards-scroll-container"></div>
+        <button class="btn btn-secondary btn-back-menu">BACK TO MENU</button>
+      </div>
+    </div>
+
+    <!-- 8. SETTINGS MODAL -->
+    <div id="screen-settings" class="screen">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h2>SETTINGS</h2>
+        </div>
+        <div class="settings-group">
+          <div class="setting-row">
+            <label for="setting-master-vol">Master Volume</label>
+            <input type="range" id="setting-master-vol" min="0" max="1" step="0.05" value="1.0" />
+          </div>
+          <div class="setting-row">
+            <label for="setting-music-vol">Music Volume</label>
+            <input type="range" id="setting-music-vol" min="0" max="1" step="0.05" value="0.7" />
+          </div>
+          <div class="setting-row">
+            <label for="setting-sfx-vol">Sound FX Volume</label>
+            <input type="range" id="setting-sfx-vol" min="0" max="1" step="0.05" value="0.85" />
+          </div>
+          <div class="setting-row">
+            <label for="setting-graphics">Graphics Quality</label>
+            <select id="setting-graphics">
+              <option value="high">High (Shadows & Full Effects)</option>
+              <option value="low">Low (Battery Saver / Low-End)</option>
+            </select>
+          </div>
+          <div class="setting-row">
+            <label for="setting-controls-toggle">On-Screen D-Pad</label>
+            <input type="checkbox" id="setting-controls-toggle" checked style="width: 20px; height: 20px; accent-color: var(--primary-gold);" />
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-back-menu">BACK TO MENU</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Game Bootstrap -->
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

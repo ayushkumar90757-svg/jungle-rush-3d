@@ -1,0 +1,12 @@
+{
+  "appId": "com.junglerush.game3d",
+  "appName": "Jungle Rush 3D",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "backgroundColor": "#0b1a0e",
+    "allowMixedContent": true
+  }
+}

@@ -1,0 +1,105 @@
+name: Build Android APK & Release
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build & Package Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Set up Java JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Node Dependencies
+        run: npm install
+
+      - name: Build Web Application
+        run: npm run build
+
+      - name: Add Capacitor Android Platform (if missing)
+        run: |
+          if [ ! -d "android" ]; then
+            npx cap add android
+          fi
+
+      - name: Sync Capacitor Android
+        run: npx cap sync android
+
+      - name: Make Gradle Wrapper Executable
+        run: chmod +x android/gradlew
+
+      - name: Build Android Debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Locate and Rename APK
+        run: |
+          mkdir -p output
+          APK_PATH=$(find android/app/build/outputs/apk/debug/ -name "*.apk" | head -n 1)
+          if [ -f "$APK_PATH" ]; then
+            cp "$APK_PATH" output/JungleRush3D-debug.apk
+            echo "Found APK at $APK_PATH, copied to output/JungleRush3D-debug.apk"
+          else
+            echo "ERROR: APK not found!"
+            exit 1
+          fi
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: JungleRush3D-Android-APK
+          path: output/JungleRush3D-debug.apk
+          retention-days: 30
+
+      - name: Create GitHub Release with APK
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/master')
+        with:
+          tag_name: v1.0.0
+          name: Jungle Rush 3D - Android APK v1.0.0
+          body: |
+            ## 🌴 Jungle Rush 3D - Official Android Release
+
+            Download and install the complete, polished 3D endless runner game on your Android device!
+
+            ### Features:
+            - Smooth 3D Endless Running
+            - 3-Lane Lateral Movement + Jump + Slide
+            - 3 Playable Characters (Dash Drake, Maya Shadow, Captain Rex)
+            - 4 Power-Ups: Magnet, Shield, Speed Boost, 2x Multiplier
+            - Procedural WebAudio Tribal Soundtrack & Sound Effects
+            - Missions & 7-Day Daily Login Rewards
+            - 60 FPS Optimized for Low-End & High-End Devices
+
+            ### Installation:
+            1. Download `JungleRush3D-debug.apk` below.
+            2. Open the downloaded file on your Android device.
+            3. If prompted, allow "Install from Unknown Sources".
+            4. Enjoy the jungle adventure!
+          files: output/JungleRush3D-debug.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
