@@ -1,6 +1,23 @@
 # 🌴 JUNGLE RUSH 3D - 3D Endless Runner Game
 
+[![Android APK Release](https://img.shields.io/badge/Download-Android%20APK%20(v1.0.0)-green?logo=android)](https://github.com/ayushkumar90757-svg/jungle-rush-3d/releases/download/v1.0.0/JungleRush3D-v1.0.0.apk)
+[![GitHub Release](https://img.shields.io/github/v/release/ayushkumar90757-svg/jungle-rush-3d)](https://github.com/ayushkumar90757-svg/jungle-rush-3d/releases/tag/v1.0.0)
+
 A high-performance, polished 3D endless runner inspired by Temple Run 2, featuring original jungle assets, procedural humanoid characters, dynamic WebAudio tribal soundtrack, object pooling, and responsive mobile + desktop controls.
+
+---
+
+## 📱 Download & Install Android APK
+
+You can download and play the game directly on your Android phone:
+- **Direct APK Download**: [**`JungleRush3D-v1.0.0.apk` (4.1 MB)**](https://github.com/ayushkumar90757-svg/jungle-rush-3d/releases/download/v1.0.0/JungleRush3D-v1.0.0.apk)
+- **GitHub Release Page**: [v1.0.0 Release Notes & Assets](https://github.com/ayushkumar90757-svg/jungle-rush-3d/releases/tag/v1.0.0)
+
+### Quick Phone Installation:
+1. Tap the direct APK download link on your phone.
+2. Open the downloaded `JungleRush3D-v1.0.0.apk` file.
+3. Allow "Install unknown apps" when prompted by Android.
+4. Tap **Install** and enjoy running!
 
 ---
 
